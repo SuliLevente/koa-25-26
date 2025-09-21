@@ -1,0 +1,76 @@
+/* Általános beállítások (amelyek mindegyik feladatban használva vannak) */
+.container {
+    display: flex;
+}
+.green {
+    background-color: green;
+}
+.yellow {
+    background-color: yellow;
+}
+.purple {
+    background-color: purple;
+}
+.width-100px {
+    width: 100px;
+}
+.height-100px {
+    height: 100px;
+}
+/* Ezt a részt nem írták a feladatok, de
+a weboldal megnyitásakor segít az áttekinthetőségben. */
+li {
+    list-style: none;
+}
+
+/* 1. feladat */
+.width-800px {
+    width: 800px;
+}
+.height-300px {
+    height: 300px;
+}
+.d-none {
+    display: none;
+}
+.align-items-center {
+    /* Ez a rész a 2. és 3. feladatban is felhasználásra kerül. */
+    align-items: center;
+}
+.justify-content-center {
+    justify-content: center;
+}
+
+/* 2. feladat */
+.width-100percent {
+    /* Ez a rész a 3. és 4. feladatban is felhasználásra kerül. */
+    width: 100%;
+}
+.height-400px {
+    /* Ez a rész a 3. és 4. feladatban is felhasználásra kerül. */
+    height: 400px;
+}
+.justify-content-left {
+    justify-content: left;
+}
+/* Ezt a részt nem írta a feladat, de a weblap megnyitásakor
+segít az áttekinthetőségben (és a képeken is így van).*/
+.li-task-2 {
+    margin-right: 10px;
+}
+
+/* 3. feladat */
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
+/* 4. feladat */
+.align-items-flex-end {
+    align-items: flex-end;
+}
+.justify-content-right {
+    justify-content: right;
+}
+.li-task-4 {
+    margin-left: 10px;
+}
