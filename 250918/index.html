@@ -16,17 +16,17 @@
         </div>
     <script>
         function register() {
-            let email = document.getElementById("emailInput").value;
-            let password1 = document.getElementById("password1").value;
-            let password2 = document.getElementById("password2").value;
+            const email = document.getElementById("emailInput").value;
+            const password1 = document.getElementById("password1").value;
+            const password2 = document.getElementById("password2").value;
             if(email.length == 0 || password1.length == 0 || password2.length == 0) {
-                console.error("You need to fill out every field!")
+                alert("You need to fill out every field!")
             }
-            else if(!email.includes("@") || !(email.split('@')[1].includes(".")) || ((email.split('@')[1]).split('.')[0].length == 0) || ((email.split('@')[1]).split('.')[0].length < 2) || ((email.split('@')[1]).split('.')[0].length > 13)) {
-                console.error("Invalid e-mail address.")
+            else if(!email.includes("@") || !(email.split('@')[1].includes(".")) || ((email.split('@')[1]).split('.')[0].length == 0) || ((email.split('@')[1]).split('.')[0].length < 2) || (((email.split('@')[1]).split('.')[1].length > 3) || ((email.split('@')[1]).split('.')[1].length < 2))) {
+                alert("Invalid e-mail address.")
             }
             else if(password1 != password2) {
-                console.error("The passwords don't match.")
+                alert("The passwords don't match.")
             }
             else {
                 alert("Registered successfully.")
