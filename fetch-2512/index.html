@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch API – Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .row {
+            margin-bottom: 8px;
+        }
+        .label {
+            font-weight: bold;
+        }
+        .password {
+            font-family: monospace;
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Felhasználók adatai (Fetch API)</h1>
+<div id="usersContainer">Betöltés…</div>
+
+<script>
+    fetch('https://surveys-5jvt.onrender.com/api/users')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Hálózati hiba: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(users => {
+            console.log('API válasz:', users);
+
+            const container = document.getElementById('usersContainer');
+            container.innerHTML = '';
+
+            users.forEach(user => {
+                console.log(
+                    'ID:', user.id,
+                    'Név:', user.firstName + ' ' + user.lastName,
+                    'Email:', user.email,
+                    'Jelszó:', user.password
+                );
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="row"><span class="label">ID:</span> ${user.id}</div>
+                    <div class="row"><span class="label">Név:</span> ${user.firstName} ${user.lastName}</div>
+                    <div class="row"><span class="label">Email:</span> ${user.email}</div>
+                    <div class="row"><span class="label">Jelszó:</span> <span class="password">${user.password}</span></div>
+                `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Fetch hiba:', error);
+            document.getElementById('usersContainer').innerText =
+                'Hiba történt az adatok betöltésekor.';
+        });
+</script>
+
+</body>
+</html>
