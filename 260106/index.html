@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API fetchelés gyakorlása</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        .card {
+            width: 200px;
+        }
+    </style>
+  </head>
+  <body>
+    <p class="display-4 text-center fw-bold pt-3">Autók adatai</p>
+    <div class="container-fluid d-flex flex-wrap justify-content-center align-items-center" id="carsContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+        fetch('https://surveys-5jvt.onrender.com/api/cars/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Hálózati hiba: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(cars => {
+            console.log('API válasz:', cars);
+
+            const container = document.getElementById('carsContainer');
+            container.innerHTML = '';
+
+            cars.forEach(car => {
+
+                const card = document.createElement('div');
+                card.className = 'card p-2 m-3 text-center bg-success text-white fw-bold';
+                card.innerHTML = `
+                    <div class=\"bg-dark card-header\">Azonosító: ${car.id}</div>
+                    <div class=\"car-body bg-light text-black p-3\"">
+                        Model: ${car.model}<br>Márka: ${car.brand}<br>Év: ${car.year}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Fetch hiba:', error);
+            document.getElementById('usersContainer').innerText =
+                'Hiba történt az adatok betöltésekor.';
+        });
+    </script>
+  </body>
+</html>
