@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cars</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="bg-dark">
+        <p class="display-4 fw-bold text-white text-center mt-3">Cars API list</p>
+        <p id="currentMode" class="display-6 text-white text-center mt-3">Current mode: <span id="modeText" style="color: gray;">Nothing</span></p>
+        <div class="container mx-auto d-flex justify-content-center mb-3">
+            <button type="button" class="btn btn-success m-3" onclick="addCar()">Add new car</button>
+            <button type="button" class="btn btn-info m-3" onclick="editMode()">Edit mode</button>
+            <button type="button" class="btn btn-danger m-3" onclick="deleteMode()">Delete mode</button>
+            <button type="button" class="btn btn-secondary m-3" onclick="exitMode()">Exit mode</button>
+        </div>
+        <div id="carsContainer" class="container bg-light p-3 d-flex flex-wrap" style="border-radius: 12px;">
+            <script>
+                fetch("https://surveys-5jvt.onrender.com/api/cars/")
+                .then(response => response.json())
+                .then(json => {
+                json.forEach(car => {
+                    let card = document.createElement("div");
+                    card.classList = "card m-3";
+                    card.style = "border: 4px solid black; border-radius: 12px;";
+                    card.onclick = function() { onCarClick(car.id) };
+                    let cardBody = document.createElement("div");
+                    cardBody.classList = "card-body";
+                    let title = document.createElement("h5");
+                    title.classList = "card-title";
+                    title.innerText = car.model;
+                    cardBody.appendChild(title);
+                    card.appendChild(cardBody);
+                    document.getElementById("carsContainer").appendChild(card);
+                });
+                });
+
+                if(localStorage.getItem("mode") == null) {
+                    localStorage.setItem("mode", "nothing");
+                }
+                else {
+                    if(localStorage.getItem("mode") == "edit") {
+                        document.getElementById("modeText").innerText = "Edit";
+                        document.getElementById("modeText").style.color = "aqua";
+                    }
+                    else if(localStorage.getItem("mode") == "delete") {
+                        document.getElementById("modeText").innerText = "Delete";
+                        document.getElementById("modeText").style.color = "red";
+                    }
+                }
+
+                function deleteMode() {
+                    if(localStorage.getItem("mode") == "delete") {
+                        alert("Already in delete mode!");
+                    }
+                    else {
+                        localStorage.setItem("mode", "delete");
+                        document.getElementById("modeText").innerText = "Delete";
+                        document.getElementById("modeText").style.color = "red";
+                    }
+                }
+
+                function editMode() {
+                    if(localStorage.getItem("mode") == "edit") {
+                        alert("Already in edit mode!");
+                    }
+                    else {
+                        localStorage.setItem("mode", "edit");
+                        document.getElementById("modeText").innerText = "Edit";
+                        document.getElementById("modeText").style.color = "aqua";
+                    }
+                }
+
+                function exitMode() {
+                    if(localStorage.getItem("mode") == "nothing") {
+                        alert("Already in nothing mode!");
+                    }
+                    else {
+                        localStorage.setItem("mode", "nothing");
+                        document.getElementById("modeText").innerText = "Nothing";
+                        document.getElementById("modeText").style.color = "gray";
+                    }
+                }
+
+                function addCar() {
+                    let model = prompt("Enter model:");
+                    let brand = prompt("Enter brand:");
+                    let year = prompt("Enter year:");
+                    fetch("https://surveys-5jvt.onrender.com/api/cars/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            brand: brand,
+                            year: parseInt(year)
+                        })
+                    })
+                    .then(response => {
+                        if(response.ok) {
+                            alert("Car added successfully!");
+                            location.reload();
+                        }
+                        else {
+                            alert("Failed to add car!");
+                        }
+                    });
+                }
+
+                function onCarClick(idd) {
+                    if(localStorage.getItem("mode") == "delete") {
+                        fetch("https://surveys-5jvt.onrender.com/api/cars/" + idd, {
+                            method: "DELETE"
+                        })
+                        .then(response => {
+                            if(response.ok) {
+                                alert("Car with id " + idd + " deleted successfully!");
+                                localStorage.setItem("mode", "nothing");
+                                document.getElementById("modeText").innerText = "Nothing";
+                                document.getElementById("modeText").style.color = "gray";
+                                location.reload();
+                            }
+                            else {
+                                alert("Failed to delete car with id " + idd + "!");
+                            }
+                        });
+                    }
+                    else if(localStorage.getItem("mode") == "edit") {
+                        let newModel = prompt("Enter new model:");
+                        let newBrand = prompt("Enter new brand:");
+                        let newYear = prompt("Enter new year:");
+                        fetch("https://surveys-5jvt.onrender.com/api/cars/" + idd, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                model: newModel,
+                                brand: newBrand,
+                                year: parseInt(newYear)
+                            })
+                        })
+                        .then(response => {
+                            if(response.ok) {
+                                alert("Car with id " + idd + " edited successfully!");
+                                localStorage.setItem("mode", "nothing");
+                                document.getElementById("modeText").innerText = "Nothing";
+                                document.getElementById("modeText").style.color = "gray";
+                                location.reload();
+                            }
+                            else {
+                                alert("Failed to edit car with id " + idd + "!");
+                            }
+                        });
+                    }
+                    else {
+                        fetch("https://surveys-5jvt.onrender.com/api/cars/")
+                        .then(response => response.json())
+                        .then(json => {
+                        json.forEach(car => {
+                            if(car.id == idd) {
+                                alert("Id: " + car.id + "\n" + "Model: " + car.model + "\n" + "Brand: " + car.brand + "\n" +
+                                    "Year: " + car.year + "\n");
+                            }
+                        });
+                        });
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>
